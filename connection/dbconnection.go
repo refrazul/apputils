@@ -1,6 +1,7 @@
 package connection
 
 import (
+	"database/sql"
 	"errors"
 	"time"
 )
@@ -17,6 +18,7 @@ type DBConnction interface {
 	Connect(params DBParams) error
 	GetNow() (*time.Time, error)
 	Close() error
+	Insert(query string, params ...interface{}) (sql.Result, error)
 }
 
 func IsParams(params *DBParams) error {
@@ -38,6 +40,5 @@ func IsParams(params *DBParams) error {
 	if params.Password == "" {
 		return errors.New("Invalid password")
 	}
-
 	return nil
 }

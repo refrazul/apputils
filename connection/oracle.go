@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	_ "gopkg.in/goracle.v2"
+	_ "github.com/godror/godror"
 )
 
 type Oracle struct {
@@ -17,13 +17,13 @@ func (o *Oracle) Connect(params DBParams) error {
 		return err
 	}
 
-	dns := fmt.Sprintf("%s/%s@%s:%d/%s",
+	dns := fmt.Sprintf(`user=%s password=%s connectString="%s:%d/%s"`,
 		params.User,
 		params.Password,
 		params.Host,
 		params.Port,
 		params.Db)
-	db, err := sql.Open("goracle", dns)
+	db, err := sql.Open("godror", dns)
 
 	if err != nil {
 		return err
@@ -51,4 +51,8 @@ func (o *Oracle) GetNow() (*time.Time, error) {
 
 func (o *Oracle) Close() error {
 	return o.db.Close()
+}
+
+func (o *Oracle) Insert(query string, params ...interface{}) (sql.Result, error) {
+	return o.db.Exec(query, params)
 }

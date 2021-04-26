@@ -52,3 +52,7 @@ func (p *Postgres) GetNow() (*time.Time, error) {
 func (p *Postgres) Close() error {
 	return p.db.Close()
 }
+
+func (p *Postgres) Insert(query string, params ...interface{}) (sql.Result, error) {
+	return p.db.Exec(query, params)
+}
