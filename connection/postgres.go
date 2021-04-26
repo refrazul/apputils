@@ -13,6 +13,10 @@ type Postgres struct {
 }
 
 func (p *Postgres) Connect(params DBParams) error {
+	if err := IsParams(&params); err != nil {
+		return err
+	}
+
 	dns := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable",
 		params.Host,
 		params.Port,
@@ -22,6 +26,10 @@ func (p *Postgres) Connect(params DBParams) error {
 	db, err := sql.Open("postgres", dns)
 
 	if err != nil {
+		return err
+	}
+
+	if err = db.Ping(); err != nil {
 		return err
 	}
 

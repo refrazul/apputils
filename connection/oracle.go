@@ -13,6 +13,10 @@ type Oracle struct {
 }
 
 func (o *Oracle) Connect(params DBParams) error {
+	if err := IsParams(&params); err != nil {
+		return err
+	}
+
 	dns := fmt.Sprintf("%s/%s@%s:%d/%s",
 		params.User,
 		params.Password,
@@ -22,6 +26,10 @@ func (o *Oracle) Connect(params DBParams) error {
 	db, err := sql.Open("goracle", dns)
 
 	if err != nil {
+		return err
+	}
+
+	if err = db.Ping(); err != nil {
 		return err
 	}
 
