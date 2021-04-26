@@ -1,6 +1,6 @@
 package factory
 
-import "apputils/connection"
+import "github.com/refrazul/apputils/connection"
 
 func FactoryConn(connType string) connection.DBConnction {
 
