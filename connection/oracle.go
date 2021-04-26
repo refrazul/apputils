@@ -54,5 +54,9 @@ func (o *Oracle) Close() error {
 }
 
 func (o *Oracle) Insert(query string, params ...interface{}) (sql.Result, error) {
-	return o.db.Exec(query, params)
+	if params == nil {
+		return o.db.Exec(query)
+	} else {
+		return o.db.Exec(query, params)
+	}
 }

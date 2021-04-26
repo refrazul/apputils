@@ -54,5 +54,9 @@ func (p *Postgres) Close() error {
 }
 
 func (p *Postgres) Insert(query string, params ...interface{}) (sql.Result, error) {
-	return p.db.Exec(query, params)
+	if params == nil {
+		return p.db.Exec(query)
+	} else {
+		return p.db.Exec(query, params)
+	}
 }
