@@ -12,9 +12,9 @@ type Postgres struct {
 	db *sql.DB
 }
 
-func (p *Postgres) Connect(params DBParams) error {
+func (p *Postgres) Connect(params DBParams) (*sql.DB, error) {
 	if err := IsParams(&params); err != nil {
-		return err
+		return nil, err
 	}
 
 	dns := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable",
@@ -26,15 +26,15 @@ func (p *Postgres) Connect(params DBParams) error {
 	db, err := sql.Open("postgres", dns)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err = db.Ping(); err != nil {
-		return err
+		return nil, err
 	}
 
 	p.db = db
-	return nil
+	return p.db, nil
 }
 
 func (p *Postgres) GetNow() (*time.Time, error) {
@@ -53,10 +53,6 @@ func (p *Postgres) Close() error {
 	return p.db.Close()
 }
 
-func (p *Postgres) Insert(query string, params ...interface{}) (sql.Result, error) {
-	if params == nil {
-		return p.db.Exec(query)
-	} else {
-		return p.db.Exec(query, params)
-	}
+func (p *Postgres) GetConn() *sql.DB {
+	return p.db
 }

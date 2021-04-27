@@ -15,10 +15,10 @@ type DBParams struct {
 }
 
 type DBConnction interface {
-	Connect(params DBParams) error
+	Connect(params DBParams) (*sql.DB, error)
 	GetNow() (*time.Time, error)
 	Close() error
-	Insert(query string, params ...interface{}) (sql.Result, error)
+	GetConn() *sql.DB
 }
 
 func IsParams(params *DBParams) error {

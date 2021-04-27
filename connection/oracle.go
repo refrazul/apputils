@@ -12,9 +12,9 @@ type Oracle struct {
 	db *sql.DB
 }
 
-func (o *Oracle) Connect(params DBParams) error {
+func (o *Oracle) Connect(params DBParams) (*sql.DB, error) {
 	if err := IsParams(&params); err != nil {
-		return err
+		return nil, err
 	}
 
 	dns := fmt.Sprintf(`user=%s password=%s connectString="%s:%d/%s"`,
@@ -26,15 +26,15 @@ func (o *Oracle) Connect(params DBParams) error {
 	db, err := sql.Open("godror", dns)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err = db.Ping(); err != nil {
-		return err
+		return nil, err
 	}
 
 	o.db = db
-	return nil
+	return o.db, nil
 }
 
 func (o *Oracle) GetNow() (*time.Time, error) {
@@ -53,10 +53,6 @@ func (o *Oracle) Close() error {
 	return o.db.Close()
 }
 
-func (o *Oracle) Insert(query string, params ...interface{}) (sql.Result, error) {
-	if params == nil {
-		return o.db.Exec(query)
-	} else {
-		return o.db.Exec(query, params)
-	}
+func (o *Oracle) GetConn() *sql.DB {
+	return o.db
 }
