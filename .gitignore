@@ -13,4 +13,6 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
-dbconnection_test.go
+# archivo con infoación de conexión
+oracle.properties
+postgres.properties
