@@ -1,0 +1,6 @@
+db_server: 127.0.0.1
+db_port: 5432
+db_name : mibasededatos
+db_user : usuario
+db_password : clave
+db_is_secure : true
