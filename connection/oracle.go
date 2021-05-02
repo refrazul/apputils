@@ -75,13 +75,20 @@ func (o *Oracle) TableInfo(table string) ([]Column, error) {
 		var column Column
 		var default1 sql.NullString
 		var precision sql.NullInt32
+		var nullable string
 
 		err := res.Scan(&column.ColumnName, &column.ColumnType,
-			&column.ColumnLegth, &precision, &column.ColumnNullable,
+			&column.ColumnLegth, &precision, &nullable,
 			&default1, &column.ColumnOrder)
 
 		if err != nil {
 			return []Column{}, err
+		}
+
+		if nullable == "Y" {
+			column.ColumnNullable = true
+		} else if nullable == "N" {
+			column.ColumnNullable = false
 		}
 
 		if default1.Valid {
