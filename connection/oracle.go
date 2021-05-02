@@ -56,3 +56,44 @@ func (o *Oracle) Close() error {
 func (o *Oracle) GetConn() *sql.DB {
 	return o.db
 }
+
+func (o *Oracle) TableInfo(table string) ([]Column, error) {
+	res, err := o.db.Query(`select column_name, data_type, 
+	data_length, data_precision, nullable, 
+	data_default, column_id 
+		from ALL_TAB_COLUMNS 
+		where
+		table_name = :name order by column_id asc`, table)
+
+	if err != nil {
+		return []Column{}, err
+	}
+
+	var columns []Column
+
+	for res.Next() {
+		var column Column
+		var default1 sql.NullString
+		var precision sql.NullInt32
+
+		err := res.Scan(&column.ColumnName, &column.ColumnType,
+			&column.ColumnLegth, &precision, &column.ColumnNullable,
+			&default1, &column.ColumnOrder)
+
+		if err != nil {
+			return []Column{}, err
+		}
+
+		if default1.Valid {
+			column.ColumnDefault = default1.String
+		}
+
+		if precision.Valid {
+			column.ColumnPrecision = int(precision.Int32)
+		}
+
+		columns = append(columns, column)
+	}
+
+	return columns, nil
+}

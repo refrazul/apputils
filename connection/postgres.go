@@ -56,3 +56,7 @@ func (p *Postgres) Close() error {
 func (p *Postgres) GetConn() *sql.DB {
 	return p.db
 }
+
+func (p *Postgres) TableInfo(table string) ([]Column, error) {
+	return []Column{}, nil
+}
