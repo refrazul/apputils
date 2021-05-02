@@ -14,11 +14,22 @@ type DBParams struct {
 	Db       string
 }
 
+type Column struct {
+	ColumnLegth     int
+	ColumnName      string
+	ColumnNullable  bool
+	ColumnType      string
+	ColumnOrder     int
+	ColumnPrecision int
+	ColumnDefault   string
+}
+
 type DBConnction interface {
 	Connect(params DBParams) (*sql.DB, error)
 	GetNow() (*time.Time, error)
 	Close() error
 	GetConn() *sql.DB
+	TableInfo() ([]Column, error)
 }
 
 func IsParams(params *DBParams) error {
