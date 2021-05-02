@@ -29,7 +29,7 @@ type DBConnction interface {
 	GetNow() (*time.Time, error)
 	Close() error
 	GetConn() *sql.DB
-	TableInfo() ([]Column, error)
+	TableInfo(table string) ([]Column, error)
 }
 
 func IsParams(params *DBParams) error {
